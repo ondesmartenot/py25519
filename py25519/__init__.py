@@ -1,10 +1,10 @@
-from ctypes import cdll, CDLL, c_ulonglong, byref, create_string_buffer, util, RTLD_GLOBAL
+from ctypes import CDLL, c_ulonglong, byref, create_string_buffer, util, RTLD_GLOBAL
 
 librb = CDLL(util.find_library('randombytes_kernel') or
              util.find_library('librandombytes_kernel'),
              mode=RTLD_GLOBAL)
-lib = CDLL(util.find_library('25519') or
-                       util.find_library('lib25519'))
+lib = CDLL(util.find_library('25519') or util.find_library('lib25519'))
+
 if not lib._name:
     raise ValueError('Unable to find lib25519')
 
@@ -23,9 +23,13 @@ lib25519_sign_BYTES = 64
 
 
 def dh_keypair() -> (bytes, bytes):
+    """
+    Returns a Curve25519 public and private DH keypair
+    pk, sk = py25519.dh_keypair()
+    """
     sk = create_string_buffer(lib25519_dh_SECRETKEYBYTES)
     pk = create_string_buffer(lib25519_dh_PUBLICKEYBYTES)
-    lib.lib25519_dh_keypair(pk, sk)
+    lib.lib25519_dh_x25519_keypair(pk, sk)
     return pk.raw, sk.raw
 
 
@@ -37,14 +41,14 @@ def dh(pk, sk) -> bytes:
     sk = create_string_buffer(sk)
     pk = create_string_buffer(pk)
     k = create_string_buffer(lib25519_dh_BYTES)
-    lib.lib25519_dh(k, pk, sk)
+    lib.lib25519_dh_x25519(k, pk, sk)
     return k.raw
 
 
 def sign_keypair():
     pk = create_string_buffer(lib25519_sign_PUBLICKEYBYTES)
     sk = create_string_buffer(lib25519_sign_SECRETKEYBYTES)
-    lib.lib25519_sign_keypair(pk, sk)
+    lib.lib25519_sign_ed25519_keypair(pk, sk)
     return pk.raw, sk.raw
 
 
@@ -55,7 +59,7 @@ def sign(m, sk):
     sm = create_string_buffer(len(m) + lib25519_sign_BYTES)
     m = create_string_buffer(m)
     sk = create_string_buffer(sk)
-    lib.lib25519_sign(sm, byref(smlen), m, mlen, sk)
+    lib.lib25519_sign_ed25519(sm, byref(smlen), m, mlen, sk)
     return sm.raw[:smlen.value]
 
 
@@ -65,6 +69,6 @@ def open(sm, pk):
     m = create_string_buffer(len(sm))
     mlen = c_ulonglong(0)
     pk = create_string_buffer(pk)
-    code = lib.lib25519_sign_open(m, byref(mlen), sm, smlen, pk)
+    code = lib.lib25519_sign_ed25519_open(m, byref(mlen), sm, smlen, pk)
     __check(code)
     return m.raw[:mlen.value]
