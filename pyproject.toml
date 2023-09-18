@@ -1,0 +1,50 @@
+[project]
+name = "py25519"
+version = "20230918"
+description = "Python wrapper for lib25519 microlibrary"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {file = "LICENSE"}
+authors= [
+         {name = "Jonathan Levin", email = "pqconnect@riseup.net" }
+]
+classifiers=[
+    "Programming Language :: Python :: 3",
+    "Topic :: Security :: Cryptography",
+    "Topic :: Security"
+]
+
+[project.urls]
+Repository = "https://github.com/ondesmartenot/py25519"
+
+[build-system]
+build-backend = "flit_core.buildapi"
+requires = ["flit_core >=3.8.0,<4"]
+
+[tool.black]
+line-length = 79
+
+[tool.mypy]
+# Disallow untyped definitions and calls
+# disallow_untyped_calls = "False"
+disallow_untyped_defs = "True"
+disallow_incomplete_defs = "True"
+check_untyped_defs = "True"
+disallow_untyped_decorators = "True"
+
+# None and optional handling
+no_implicit_optional = "True"
+
+# Configuring warnings
+warn_unused_ignores = "True"
+warn_no_return = "True"
+# warn_return_any = "True"
+warn_redundant_casts = "True"
+
+# Misc things
+strict_equality = "True"
+
+# Config file
+warn_unused_configs = "True"
+
+ignore_missing_imports = "True"
