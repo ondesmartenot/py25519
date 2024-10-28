@@ -8,7 +8,7 @@ from ctypes import (
 )
 from typing import Tuple
 
-librb = CDLL(util.find_library("randombytes"), mode=RTLD_GLOBAL))
+librb = CDLL(util.find_library("randombytes"), mode=RTLD_GLOBAL)
 
 lib = CDLL(util.find_library("25519"))
 
