@@ -8,12 +8,9 @@ from ctypes import (
 )
 from typing import Tuple
 
-librb = CDLL(
-    util.find_library("randombytes_kernel")
-    or util.find_library("librandombytes_kernel"),
-    mode=RTLD_GLOBAL,
-)
-lib = CDLL(util.find_library("25519") or util.find_library("lib25519"))
+librb = CDLL(util.find_library("randombytes"), mode=RTLD_GLOBAL)
+
+lib = CDLL(util.find_library("25519"))
 
 if not lib._name:
     raise ValueError("Unable to find lib25519")
