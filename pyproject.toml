@@ -1,6 +1,6 @@
 [project]
 name = "py25519"
-version = "20230918"
+version = "20241202"
 description = "Python wrapper for lib25519 microlibrary"
 readme = "README.md"
 requires-python = ">=3.7"
